@@ -6,10 +6,13 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +42,16 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = Uri.parse(url);
 
             DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI)
+                    .setAllowedOverRoaming(false)
+                    .setTitle(filename)
+                    .setMimeType("image/*")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, File.separator+filename+"png");
 
+            downloadManager.enqueue(request);
+
+            Toast.makeText(this, "Image Successfull download", Toast.LENGTH_SHORT).show();
         }
         catch (Exception e){
 
